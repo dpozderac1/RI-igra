@@ -67,7 +67,7 @@ public class InventorySkripta : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     public static Vector3[] dajPozicijeDugmadi()

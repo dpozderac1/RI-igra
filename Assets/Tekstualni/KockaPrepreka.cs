@@ -52,10 +52,10 @@ public class KockaPrepreka : MonoBehaviour
 
         yield return new WaitForSeconds(vrijemeCekanja);
         iTween.MoveTo(trenutnaKocka, new Vector3(trenutnaKocka.transform.position.x - 2.0f, trenutnaKocka.transform.position.y, trenutnaKocka.transform.position.z), vrijeme);
-        Debug.Log("Tu sam 1");
+        
         yield return new WaitForSeconds(vrijeme);
         iTween.MoveTo(trenutnaKocka, new Vector3(trenutnaKocka.transform.position.x + 2.0f, trenutnaKocka.transform.position.y, trenutnaKocka.transform.position.z), vrijeme);
-        Debug.Log("Tu sam 2");
+        
         yield return new WaitForSeconds(vrijeme);
 
         if (redoslijed == 1)

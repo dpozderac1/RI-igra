@@ -22,7 +22,7 @@ public class OpenChest : MonoBehaviour
 
     private static bool otvoreno=false;
 
-    public Sprite slikaKljucaSprite;
+    public Sprite slikaSvijeceSprite;
 
     // Start is called before the first frame update
     void Start()
@@ -87,13 +87,13 @@ public class OpenChest : MonoBehaviour
 
     IEnumerator PrikaziKljucKorutina()
     {
-        GameObject kljuc = GameObject.Find("KljucUTamnici");
-        Vector3 pozicija = kljuc.transform.position;
+        GameObject svijeca = GameObject.Find("SvijecaPredmet");
+        Vector3 pozicija = svijeca.transform.position;
         pozicija.y += 0.5f;
-        iTween.MoveTo(kljuc, iTween.Hash("position", pozicija, "time", 2f));
+        iTween.MoveTo(svijeca, iTween.Hash("position", pozicija, "time", 2f));
         yield return new WaitForSeconds(2f);
-        Destroy(kljuc);
-        GameObject.Find("NadjenPredmetDugme").GetComponent<NadjenPredmetSkripta>().prikaziObjekat(slikaKljucaSprite,"KljucUTamnici");
+        Destroy(svijeca);
+        GameObject.Find("NadjenPredmetDugme").GetComponent<NadjenPredmetSkripta>().prikaziObjekat(slikaSvijeceSprite, "SvijecaPredmet");
     }
 
     private int Add (ref int counter)

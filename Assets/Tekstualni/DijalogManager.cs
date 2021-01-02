@@ -101,6 +101,10 @@ public class DijalogManager : MonoBehaviour
         {
             SceneManager.LoadScene(3);
         }
+        else
+        {
+            MouseCamLook.zakociRotacijuMisa = false;
+        }
     }
 
     

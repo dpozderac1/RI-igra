@@ -14,6 +14,8 @@ public class PomjeriVikinga : MonoBehaviour
     public static bool trebaTrcati = false;
     bool azurirajHodanje = true;
 
+    public GameObject kljuc;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,7 +46,7 @@ public class PomjeriVikinga : MonoBehaviour
         if (viking.transform.position.z < 9)
         {
             viking.GetComponent<Animator>().runtimeAnimatorController = hodaAnimator;
-            viking.transform.position = new Vector3(viking.transform.position.x, viking.transform.position.y, viking.transform.position.z + 0.01f);
+            viking.transform.position = new Vector3(viking.transform.position.x, viking.transform.position.y, viking.transform.position.z + 0.02f);
         }
         else if (viking.transform.position.z >= 9 && viking.transform.eulerAngles.y < 90)
         {
@@ -54,6 +56,11 @@ public class PomjeriVikinga : MonoBehaviour
         else if (viking.transform.position.z >= 9 && viking.transform.eulerAngles.y > 90)
         {
             Debug.Log("Trebao bi trcati");
+
+            //ispusti kljuc
+            //kljuc.GetComponent<Renderer>().enabled = true;
+            kljuc.SetActive(true);
+
             viking.GetComponent<Animator>().runtimeAnimatorController = trciAnimator;
 
             viking.transform.position = new Vector3(viking.transform.position.x + 0.05f, viking.transform.position.y, viking.transform.position.z);
@@ -73,11 +80,11 @@ public class PomjeriVikinga : MonoBehaviour
 
         if (viking.transform.eulerAngles.y > 180)
         {            
-            viking.transform.position = new Vector3(viking.transform.position.x - 0.01f, viking.transform.position.y, viking.transform.position.z);
+            viking.transform.position = new Vector3(viking.transform.position.x - 0.02f, viking.transform.position.y, viking.transform.position.z);
         }
         else
         {
-            viking.transform.position = new Vector3(viking.transform.position.x + 0.01f, viking.transform.position.y, viking.transform.position.z);
+            viking.transform.position = new Vector3(viking.transform.position.x + 0.02f, viking.transform.position.y, viking.transform.position.z);
         }
 
 

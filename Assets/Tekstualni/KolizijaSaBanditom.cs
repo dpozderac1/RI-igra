@@ -17,6 +17,11 @@ public class KolizijaSaBanditom : MonoBehaviour
             Debug.Log("Zapocni konverzaciju sa banditom");
             var dugmeZaDijalog = GameObject.Find("TestButton").GetComponent<Button>();
             dugmeZaDijalog.onClick.Invoke();
+
+            //zakljucaj rotaciju misa
+            MouseCamLook.zakociRotacijuMisa = true;
+
+            
         }
     }
 
