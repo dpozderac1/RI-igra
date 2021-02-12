@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class KliknutPredmet : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class KliknutPredmet : MonoBehaviour
     public Sprite zelenaPosudaSlika;
     public Sprite maliVrcSlika;
     public Sprite slikaZlatnogKljuca;
+    public Sprite nozSlika;
+    public Sprite kantaSlika;
+    public Sprite kantaSaVodomSlika;
 
     private static bool otvorenaVrata = false;
 
@@ -26,6 +30,20 @@ public class KliknutPredmet : MonoBehaviour
     public AudioClip sipanjeTekucine;
 
     public GameObject efekat;
+
+    //public static bool zavrsenaPuzzla=false;
+    bool otvorenaVrataUSobi = false;
+
+    public GameObject unosTeksta;
+    GameObject pritisnuoTekst;
+    int[] pravaKombinacijaVrceva = { 8507, 1710, 1512, 7251, 5021 };
+    bool pomjerenSto = false;
+
+    public GameObject kantaObjekat;
+    public GameObject drugaKantaObjekat;
+    public GameObject sipanjeVodeParticle;
+
+    bool otvorioBure = false;
 
     // Start is called before the first frame update
     void Start()
@@ -168,7 +186,154 @@ public class KliknutPredmet : MonoBehaviour
                 }
 
 
+                if(hit.transform.name== "KnjigaZaCrtanje")
+                {
+                    SacuvajVarijableZaPuzzleSkripta.pozicijaIgraca = GameObject.Find("Capsule").transform.position;
+                    SacuvajVarijableZaPuzzleSkripta.rotacijaIgraca = GameObject.Find("Capsule").transform.rotation;
+                    GameObject.Find("UcitajSljedecuScenuDugme").GetComponent<Button>().onClick.Invoke();
+                }
+
+                if (hit.transform.name == "NozUSobi" && SacuvajVarijableZaPuzzleSkripta.zavrsenaPuzzla)
+                {
+                    GameObject gObject = GameObject.Find("NozUSobi");
+                    Destroy(gObject);
+                    GameObject.Find("NadjenPredmetDugme").GetComponent<NadjenPredmetSkripta>().prikaziObjekat(nozSlika, "NozUSobi");
+                }
+
+                if (hit.transform.name == "MeadBottleSkrozDesno")
+                {
+                    pritisnuoTekst = GameObject.Find("SkrozDesnoTekst");
+                    unosTeksta.SetActive(true);
+                    unosTeksta.GetComponent<InputField>().Select();
+                }
+
+                if (hit.transform.name == "HempBeckerDesno")
+                {
+                    pritisnuoTekst = GameObject.Find("DesnoTekst");
+                    unosTeksta.SetActive(true);
+                    unosTeksta.GetComponent<InputField>().Select();
+                }
+
+                if (hit.transform.name == "MugUSredini")
+                {
+                    pritisnuoTekst = GameObject.Find("SredinaTekst");
+                    unosTeksta.SetActive(true);
+                    unosTeksta.GetComponent<InputField>().Select();
+                }
+
+                if (hit.transform.name == "EmptyBeckerLijevo")
+                {
+                    pritisnuoTekst = GameObject.Find("LijevoTekst");
+                    unosTeksta.SetActive(true);
+                    unosTeksta.GetComponent<InputField>().Select();
+                }
+
+                if (hit.transform.name == "HempBeckerSkrozLijevo")
+                {
+                    pritisnuoTekst = GameObject.Find("SkrozLijevoTekst");
+                    unosTeksta.SetActive(true);
+                    unosTeksta.GetComponent<InputField>().Select();
+                }
+
+                if(kantaObjekat.activeInHierarchy && hit.transform.name == "Kanta")
+                {
+                    kantaObjekat.SetActive(false);
+                    GameObject.Find("NadjenPredmetDugme").GetComponent<NadjenPredmetSkripta>().prikaziObjekat(kantaSlika, "Kanta");
+                }
+
+                if(System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "NozUSobi") != -1 &&
+                    System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "NozUSobi") == InventorySkripta.indeksKliknutogDugmeta &&
+                    hit.transform.name == "VelikoBure")
+                {
+                    otvorioBure = true;
+                }
+
+                if (otvorioBure && System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "Kanta") != -1 &&
+                    System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "Kanta") == InventorySkripta.indeksKliknutogDugmeta &&
+                    hit.transform.name == "VelikoBure")
+                {
+                    //600540.8, 59189, 1555420
+
+                    //treba slika napunjene kante vodom
+
+                    //animacija sipanja vode
+                    drugaKantaObjekat.SetActive(true);
+                    sipanjeVodeParticle.SetActive(true);
+
+                    InventorySkripta.indeksKliknutogDugmeta = -1;
+                    int indeksKante = System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "Kanta");
+                    InventorySkripta.popunjeno[indeksKante] = false;
+                    Image slikaUDugmetu = InventorySkripta.dugmadi[indeksKante].GetComponentInChildren<Image>();
+                    Transform dijete = slikaUDugmetu.gameObject.transform;
+                    slikaUDugmetu = dijete.Find("Image").GetComponent<Image>();
+                    slikaUDugmetu.sprite = null;
+                    InventorySkripta.naziviNadjenihPredmeta[indeksKante] = "";
+
+                    StartCoroutine(sipanjeVodeUKantu());                    
+                }
+
+                if(System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "KantaSaVodom") != -1 &&
+                    System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "KantaSaVodom") == InventorySkripta.indeksKliknutogDugmeta && hit.transform.name== "fx_fire_g")
+                {
+                    Debug.Log("Ugasi vatru");
+                    GameObject obj = GameObject.Find("fx_fire_g");
+                    Destroy(obj);
+                }
+
+                Debug.Log("Kliknuto je: " + hit.transform.name);
             }
+        }
+
+        if (GameObject.Find("SkrozLijevoTekst").GetComponent<TMP_Text>().text == "8507" &&
+                    GameObject.Find("LijevoTekst").GetComponent<TMP_Text>().text == "1710" &&
+                    GameObject.Find("SredinaTekst").GetComponent<TMP_Text>().text == "1512" &&
+                    GameObject.Find("DesnoTekst").GetComponent<TMP_Text>().text == "7251" &&
+                    GameObject.Find("SkrozDesnoTekst").GetComponent<TMP_Text>().text == "5021" &&
+                    !pomjerenSto)
+        {            
+            iTween.MoveTo(GameObject.Find("StolicaZaIzmicanje"), new Vector3(0.201f, 1.0f, -25.099f), 4.0f);
+
+            iTween.MoveTo(GameObject.Find("StoZaMicanje"), new Vector3(4.173722f, 1.0f, -22.80202f), 4.0f);
+            iTween.MoveTo(GameObject.Find("TanjirZaMicanje"), new Vector3(3.3f, 1.827515f, -22.99139f), 4.0f);
+            iTween.MoveTo(GameObject.Find("TanjirZaMicanje1"), new Vector3(4.8f, 1.827515f, -22.93712f), 4.0f);
+            iTween.MoveTo(GameObject.Find("ViljuskaZaMicanje"), new Vector3(3.0f, 1.8492f, -23.034f), 4.0f);
+            iTween.MoveTo(GameObject.Find("ViljuskaZaMicanje1"), new Vector3(4.486971f, 1.8492f, -22.98568f), 4.0f);
+            iTween.MoveTo(GameObject.Find("NozZaMicanje"), new Vector3(3.556252f, 1.844f, -23.04841f), 4.0f);
+            iTween.MoveTo(GameObject.Find("NozZaMicanje1"), new Vector3(5.183217f, 1.844f, -23.03518f), 4.0f);            
+            iTween.MoveTo(GameObject.Find("DesnoTekst"), new Vector3(3.6293f, 1.8357f, -22.704f), 4.0f);
+            iTween.MoveTo(GameObject.Find("SkrozDesnoTekst"), new Vector3(5.116f, 1.828f, -22.626f), 4.0f);
+            iTween.MoveTo(GameObject.Find("MeadBottleSkrozDesno"), new Vector3(5.068f, 1.844882f, -22.534f), 4.0f);
+            iTween.MoveTo(GameObject.Find("HempBeckerDesno"), new Vector3(3.577f, 1.841204f, -22.55f), 4.0f);
+
+            kantaObjekat.SetActive(true);
+            pomjerenSto = true;
+        }        
+
+        if (!otvorenaVrataUSobi && SacuvajVarijableZaPuzzleSkripta.zavrsenaPuzzla)
+        {
+            Debug.Log("Otvori vrata");
+            GameObject gObject = GameObject.Find("Vrata Otvara Knjiga");
+            iTween.RotateBy(gObject, iTween.Hash("z", -0.30f, "time", 4f));
+            gObject = GameObject.Find("PovrsinaZaUgraviranuSlikuKnjige");
+            Destroy(gObject);
+            otvorenaVrataUSobi = true;
+        }
+
+        if (SacuvajVarijableZaPuzzleSkripta.vratioSeIzScene)
+        {
+            GameObject.Find("Capsule").transform.position = SacuvajVarijableZaPuzzleSkripta.pozicijaIgraca;
+            GameObject.Find("Capsule").transform.rotation = SacuvajVarijableZaPuzzleSkripta.rotacijaIgraca;
+            SacuvajVarijableZaPuzzleSkripta.vratioSeIzScene = false;
+            Debug.Log("Desilo se");
+        }
+
+        
+
+        if (Input.GetKeyDown(KeyCode.Return) && unosTeksta.activeInHierarchy)
+        {
+            pritisnuoTekst.GetComponent<TMP_Text>().text = unosTeksta.GetComponent<InputField>().text;
+            unosTeksta.GetComponent<InputField>().text = "";
+            unosTeksta.SetActive(false);
         }
 
         if (!otvoriVrataPoredPrekidaca && prekidaciPoredVrata[0] == 2 && prekidaciPoredVrata[1] == 3 && prekidaciPoredVrata[2] == 3)
@@ -199,6 +364,15 @@ public class KliknutPredmet : MonoBehaviour
         Destroy(zlatniKljuc);
         GameObject.Find("NadjenPredmetDugme").GetComponent<NadjenPredmetSkripta>().prikaziObjekat(slikaZlatnogKljuca, "ZlatniKljuc");
 
+    }
+
+    IEnumerator sipanjeVodeUKantu()
+    {
+        //dodati zvuk
+        yield return new WaitForSeconds(4.0f);
+        sipanjeVodeParticle.SetActive(false);
+        drugaKantaObjekat.SetActive(false);
+        GameObject.Find("NadjenPredmetDugme").GetComponent<NadjenPredmetSkripta>().prikaziObjekat(kantaSaVodomSlika, "KantaSaVodom");
     }
 }
 

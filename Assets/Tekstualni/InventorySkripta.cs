@@ -6,9 +6,9 @@ using Shapes2D;
 
 public class InventorySkripta : MonoBehaviour
 {
-    static Button[] dugmadi;
+    public static Button[] dugmadi;
 
-    static bool[] popunjeno;
+    public static bool[] popunjeno;
 
     static Vector3[] pozicijeDugmadi;
 
