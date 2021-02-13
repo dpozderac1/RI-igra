@@ -45,6 +45,7 @@ public class KliknutPredmet : MonoBehaviour
 
     bool otvorioBure = false;
 
+    private int nivo = 1; 
     // Start is called before the first frame update
     void Start()
     {
@@ -56,12 +57,30 @@ public class KliknutPredmet : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Camera kamera = GameObject.Find("Camera").GetComponent<Camera>();
+            Camera kamera = null;
+            if(GameObject.Find("Camera"))
+            {
+                kamera = GameObject.Find("Camera").GetComponent<Camera>();
+            }
+            /*else if (GameObject.Find("Camera_high"))
+            {
+                Debug.Log("Klik");
+                kamera = GameObject.Find("Camera_high").GetComponent<Camera>();
+                nivo = 3;
+            }*/
+
             Ray ray = kamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit))
             {
+                /*if (nivo == 3 && hit.transform.name == "Koliba vrata" && System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "ZlatniKljuc") != -1 && System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "ZlatniKljuc") == InventorySkripta.indeksKliknutogDugmeta)
+                {
+                    Debug.Log("Klik1");
+                    GameObject gObject = GameObject.Find(hit.transform.name);
+                    iTween.RotateBy(gObject, iTween.Hash("z", 0.35f, "time", 4f));
+                }*/
+
                 if (!otvorenaVrata && hit.transform.name == "Basement Door Left" && System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "KljucUTamnici") != -1 && System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "KljucUTamnici") == InventorySkripta.indeksKliknutogDugmeta)
                 {
                     GameObject gObject = GameObject.Find(hit.transform.name);

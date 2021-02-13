@@ -15,6 +15,12 @@ public class FlyingRigidbodyFirstPersonController : MonoBehaviour {
 	public float flightToggleTimeThreshold = 0.5f;
 	private float lastAscendKeyHit = float.MinValue;
 
+	void Start()
+    {
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
+	}
+
 	void Awake()
 	{
 		rigidbody = GetComponent<Rigidbody> ();

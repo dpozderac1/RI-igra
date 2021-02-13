@@ -24,6 +24,8 @@ public class OpenChest : MonoBehaviour
 
     public Sprite slikaSvijeceSprite;
 
+    private int nivo = 1;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,7 +47,18 @@ public class OpenChest : MonoBehaviour
 
         if(Input.GetMouseButtonDown(0))
         {
-            Camera kamera = GameObject.Find("Camera").GetComponent<Camera>();
+            Camera kamera = null;
+            if(GameObject.Find("Camera"))
+            {
+                kamera = GameObject.Find("Camera").GetComponent<Camera>();
+            }
+            else if (GameObject.Find("Camera_high"))
+            {
+                kamera = GameObject.Find("Camera_high").GetComponent<Camera>();
+                nivo = 3;
+            }
+
+          
             Ray ray = kamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
@@ -87,13 +100,29 @@ public class OpenChest : MonoBehaviour
 
     IEnumerator PrikaziKljucKorutina()
     {
-        GameObject svijeca = GameObject.Find("SvijecaPredmet");
+
+        GameObject svijeca = null;
+        if(nivo == 1)
+        {
+            svijeca = GameObject.Find("SvijecaPredmet");
+        }
+        else if (nivo == 3)
+        {
+            svijeca = GameObject.Find("ZlatniKljuc");
+        }
         Vector3 pozicija = svijeca.transform.position;
         pozicija.y += 0.5f;
         iTween.MoveTo(svijeca, iTween.Hash("position", pozicija, "time", 2f));
         yield return new WaitForSeconds(2f);
         Destroy(svijeca);
-        GameObject.Find("NadjenPredmetDugme").GetComponent<NadjenPredmetSkripta>().prikaziObjekat(slikaSvijeceSprite, "SvijecaPredmet");
+        if(nivo == 1)
+        {
+            GameObject.Find("NadjenPredmetDugme").GetComponent<NadjenPredmetSkripta>().prikaziObjekat(slikaSvijeceSprite, "SvijecaPredmet");
+        }
+        else if(nivo == 3)
+        {
+            GameObject.Find("NadjenPredmetDugme").GetComponent<NadjenPredmetSkripta>().prikaziObjekat(slikaSvijeceSprite, "ZlatniKljuc");
+        }
     }
 
     private int Add (ref int counter)
