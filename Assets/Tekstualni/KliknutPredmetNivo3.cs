@@ -18,6 +18,16 @@ public class KliknutPredmetNivo3 : MonoBehaviour
 
     private GameObject panelSaPredmetima;
 
+    public Sprite cekicSlika;
+
+    [Header("Whole Create")]
+    public MeshRenderer wholeCrate;
+    public BoxCollider boxCollider;
+    [Header("Fractured Create")]
+    public GameObject fracturedCrate;
+    [Header("Audio")]
+    public AudioSource crashAudioClip;
+
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +66,19 @@ public class KliknutPredmetNivo3 : MonoBehaviour
                     iTween.MoveTo(gObject, iTweenArgs);
                     iTween.RotateTo(gObject, iTweenArgsRotate);
                     StartCoroutine(Kraj());
+                }
+                
+                if (hit.transform.name == "Cekic")
+                {
+                    GameObject.Find("NadjenPredmetDugme").GetComponent<NadjenPredmetSkripta>().prikaziObjekat(cekicSlika, "Cekic");
+                    Destroy(GameObject.Find("Cekic"));
+                }
+                if (hit.transform.name == "KutijaFlase" && System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "Cekic") != -1 && System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "Cekic") == InventorySkripta.indeksKliknutogDugmeta)
+                {
+                    wholeCrate.enabled = false;
+                    boxCollider.enabled = false;
+                    fracturedCrate.SetActive(true);
+                    crashAudioClip.Play();
                 }
 
             }
