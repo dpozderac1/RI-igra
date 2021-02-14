@@ -10,6 +10,15 @@ public class KliknutPredmetNivo3 : MonoBehaviour
 
     private Hashtable iTweenArgs, iTweenArgsRotate;
 
+    public AudioSource audio;
+
+    public AudioClip kraj;
+
+    private GameObject panel;
+
+    private GameObject panelSaPredmetima;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +31,12 @@ public class KliknutPredmetNivo3 : MonoBehaviour
         iTweenArgsRotate.Add("rotation", openRotate);
         iTweenArgsRotate.Add("time", 1);
         iTweenArgsRotate.Add("islocal", true);
+
+        panel = GameObject.Find("PanelKraj");
+        panel.gameObject.SetActive(false);
+        panelSaPredmetima = GameObject.Find("Panel");
+
+
     }
 
     // Update is called once per frame
@@ -35,17 +50,32 @@ public class KliknutPredmetNivo3 : MonoBehaviour
         {
             if (Physics.Raycast(ray, out hit))
             {
-                Debug.Log("Klik");
                 if (hit.transform.name == "Koliba vrata" && System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "ZlatniKljuc") != -1 && System.Array.IndexOf(InventorySkripta.naziviNadjenihPredmeta, "ZlatniKljuc") == InventorySkripta.indeksKliknutogDugmeta)
                 {
-                    Debug.Log("Klik1");
                     GameObject gObject = GameObject.Find(hit.transform.name);
                     iTween.MoveTo(gObject, iTweenArgs);
                     iTween.RotateTo(gObject, iTweenArgsRotate);
-
+                    StartCoroutine(Kraj());
                 }
 
             }
+        }
+    }
+
+    IEnumerator Kraj()
+    {
+        audio.Play();
+        yield return new WaitForSeconds(audio.clip.length);
+        audio.clip = kraj;
+        audio.Play();
+
+        panelSaPredmetima.gameObject.SetActive(false);
+        panel.gameObject.SetActive(true);
+        Image img = panel.GetComponent<Image>();
+        for (float i = 0; i <= 1; i += Time.deltaTime)
+        {
+            img.color = new Color(0, 0, 0, i);
+            yield return null;
         }
     }
 }

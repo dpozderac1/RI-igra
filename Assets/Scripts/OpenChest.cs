@@ -20,6 +20,8 @@ public class OpenChest : MonoBehaviour
 
     private int[] tacnaKombinacija = { 7, 4, 1, 5 };
 
+    private int[] tacnaKombinacijaNivo3 = { 2, 1, 4, 8 };
+
     private static bool otvoreno=false;
 
     public Sprite slikaSvijeceSprite;
@@ -80,13 +82,13 @@ public class OpenChest : MonoBehaviour
                 {
                     fourthNumber.GetComponent<TextMesh>().text = Add(ref counter[3]).ToString();
                 }
+
             }
 
            
         }
 
-
-        if (!otvoreno && counter[0] == tacnaKombinacija[0] && counter[1] == tacnaKombinacija[1] && counter[2] == tacnaKombinacija[2] && counter[3] == tacnaKombinacija[3])
+        if (nivo == 1 && !otvoreno && counter[0] == tacnaKombinacija[0] && counter[1] == tacnaKombinacija[1] && counter[2] == tacnaKombinacija[2] && counter[3] == tacnaKombinacija[3])
         {
 
             iTween.MoveTo(gameObject, iTweenArgs);
@@ -94,6 +96,15 @@ public class OpenChest : MonoBehaviour
 
             otvoreno = !otvoreno;
             StartCoroutine(PrikaziKljucKorutina());            
+        }
+        else if (nivo == 3 && !otvoreno && counter[0] == tacnaKombinacijaNivo3[0] && counter[1] == tacnaKombinacijaNivo3[1] && counter[2] == tacnaKombinacijaNivo3[2] && counter[3] == tacnaKombinacijaNivo3[3])
+        {
+
+            iTween.MoveTo(gameObject, iTweenArgs);
+            iTween.RotateTo(gameObject, iTweenArgsRotate);
+
+            otvoreno = !otvoreno;
+            StartCoroutine(PrikaziKljucKorutina());
         }
 
     }
